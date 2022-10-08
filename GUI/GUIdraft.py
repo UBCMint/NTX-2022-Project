@@ -1,10 +1,10 @@
-import customtkinter
+import customtkinter as CTk
 
-customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
-customtkinter.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
+CTk.set_appearance_mode("Light")  # Modes: "System" (standard), "Dark", "Light"
+CTk.set_default_color_theme("GUI\MintTheme.json")  # Themes: "blue" (standard), "green", "dark-blue"
 
 
-class App(customtkinter.CTk):
+class App(CTk.CTk):
 
     WIDTH = 780
     HEIGHT = 520
@@ -13,6 +13,7 @@ class App(customtkinter.CTk):
         super().__init__()
 
         self.title("NTX-2022-PROJECT")
+        self.iconbitmap("GUI/Images/logo.ico")
         self.geometry(f"{App.WIDTH}x{App.HEIGHT}")
         self.protocol("WM_DELETE_WINDOW", self.on_closing)  # call .on_closing() when app gets closed
 
@@ -23,11 +24,11 @@ class App(customtkinter.CTk):
         self.grid_columnconfigure(1, weight=1, minsize=360)
         self.grid_rowconfigure(0, weight=1)
 
-        self.menu = customtkinter.CTkFrame(master=self,
+        self.menu = CTk.CTkFrame(master=self,
                                                 corner_radius=0)
         self.menu.grid(row=0, column=1, sticky="nswe")
 
-        self.stimulusWindow = customtkinter.CTkFrame(master=self)
+        self.stimulusWindow = CTk.CTkFrame(master=self)
         self.stimulusWindow.grid(row=0, column=0, sticky="nswe", padx=20, pady=20)
 
         # ============ Menu ============
@@ -37,10 +38,10 @@ class App(customtkinter.CTk):
         self.menu.grid_rowconfigure(1, weight=1)
         self.menu.grid_columnconfigure(0, weight=1)
 
-        self.analyzeMenu = customtkinter.CTkFrame(master=self.menu
+        self.analyzeMenu = CTk.CTkFrame(master=self.menu
                                                 )
         self.analyzeMenu.grid(row=0, column=0, sticky="nswe",padx=2,pady=2)
-        self.recordMenu = customtkinter.CTkFrame(master=self.menu
+        self.recordMenu = CTk.CTkFrame(master=self.menu
                                                 )
         self.recordMenu.grid(row=1, column=0, sticky="nswe",padx=2,pady=2)
 
@@ -53,38 +54,38 @@ class App(customtkinter.CTk):
         self.recordMenu.grid_rowconfigure(8, minsize=20)    # empty row with minsize as spacing
         self.recordMenu.grid_rowconfigure(11, minsize=20)  # empty row with minsize as spacing
 
-        self.recordLabel = customtkinter.CTkLabel(master=self.recordMenu,
+        self.recordLabel = CTk.CTkLabel(master=self.recordMenu,
                                               text="Record",
                                               text_font=("Roboto Medium", -16))  # font name and size in px
         self.recordLabel.grid(row=1, column=0, columnspan=4, pady=10, padx=10, sticky="we")
-        self.recordFileName = customtkinter.CTkEntry(master=self.recordMenu,
+        self.recordFileName = CTk.CTkEntry(master=self.recordMenu,
                                             placeholder_text="File Name")
         self.recordFileName.grid(row=2, column=0, columnspan=3, pady=5, padx=5, sticky="we")
 
-        self.defaultButton = customtkinter.CTkButton(master=self.recordMenu,
+        self.defaultButton = CTk.CTkButton(master=self.recordMenu,
                                                 width=70,
                                                 text="Default",
                                                 command=self.button_event)
         self.defaultButton.grid(row=2, column=3, pady=5, padx=5)
 
-        self.recordButton = customtkinter.CTkButton(master=self.recordMenu,
+        self.recordButton = CTk.CTkButton(master=self.recordMenu,
                                                 text="Record",
                                                 command=self.button_event)
         self.recordButton.grid(row=9, column=0, columnspan=2, pady=5, padx=5, sticky="we")
 
-        self.stopButton = customtkinter.CTkButton(master=self.recordMenu,
+        self.stopButton = CTk.CTkButton(master=self.recordMenu,
                                                 text="Stop",
                                                 command=self.button_event,
                                                 state="disabled")
         self.stopButton.grid(row=9, column=2, columnspan=2, pady=5, padx=5, sticky="we")
 
-        self.cancelButton = customtkinter.CTkButton(master=self.recordMenu,
+        self.cancelButton = CTk.CTkButton(master=self.recordMenu,
                                                 text="Cancel",
                                                 command=self.button_event,
                                                 state="disabled")
         self.cancelButton.grid(row=10, column=0, columnspan=2, pady=5, padx=5, sticky="we")
 
-        self.saveButton = customtkinter.CTkButton(master=self.recordMenu,
+        self.saveButton = CTk.CTkButton(master=self.recordMenu,
                                                 text="Save",
                                                 command=self.button_event,
                                                 state="disabled")
@@ -99,21 +100,21 @@ class App(customtkinter.CTk):
         self.analyzeMenu.grid_rowconfigure(8, minsize=20)    # empty row with minsize as spacing
         self.analyzeMenu.grid_rowconfigure(10, minsize=20)  # empty row with minsize as spacing
 
-        self.recordLabel = customtkinter.CTkLabel(master=self.analyzeMenu,
+        self.recordLabel = CTk.CTkLabel(master=self.analyzeMenu,
                                               text="Analyze",
                                               text_font=("Roboto Medium", -16))  # font name and size in px
         self.recordLabel.grid(row=1, column=0, columnspan=4, pady=10, padx=10, sticky="we")
 
-        self.analyzeFileName = customtkinter.CTkLabel(master=self.analyzeMenu,
+        self.analyzeFileName = CTk.CTkLabel(master=self.analyzeMenu,
                                                 text="File Name.csv")
         self.analyzeFileName.grid(row=2, column=0, columnspan=3, pady=5, padx=5, sticky="we")
 
-        self.openFileButton = customtkinter.CTkButton(master=self.analyzeMenu,
+        self.openFileButton = CTk.CTkButton(master=self.analyzeMenu,
                                                 text="Open",
                                                 command=self.button_event)
         self.openFileButton.grid(row=2, column=3, pady=5, padx=5)
 
-        self.playButton = customtkinter.CTkButton(master=self.analyzeMenu,
+        self.playButton = CTk.CTkButton(master=self.analyzeMenu,
                                                 text="Play",
                                                 command=self.button_event)
         self.playButton.grid(row=9, column=0, columnspan=4, pady=5, padx=5, sticky="we")
