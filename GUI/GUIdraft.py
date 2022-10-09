@@ -1,7 +1,7 @@
 import customtkinter as CTk
 
 CTk.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
-CTk.set_default_color_theme("GUI\MintTheme.json")  # Themes: "blue" (standard), "green", "dark-blue"
+CTk.set_default_color_theme("MintTheme.json")  # Themes: "blue" (standard), "green", "dark-blue"
 
 
 class App(CTk.CTk):
@@ -13,7 +13,7 @@ class App(CTk.CTk):
         super().__init__()
 
         self.title("NTX-2022-PROJECT")
-        self.iconbitmap("GUI/Images/logo.ico")
+        self.iconbitmap("Images/logo.ico")
         self.geometry(f"{App.WIDTH}x{App.HEIGHT}")
         self.protocol("WM_DELETE_WINDOW", self.on_closing)  # call .on_closing() when app gets closed
 
