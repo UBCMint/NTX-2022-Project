@@ -1,4 +1,7 @@
 import customtkinter as CTk
+from tkinter.filedialog import askopenfilename
+import csv
+import pandas as pd
 
 CTk.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 CTk.set_default_color_theme("GUI\MintTheme.json")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -111,7 +114,7 @@ class App(CTk.CTk):
 
         self.openFileButton = CTk.CTkButton(master=self.analyzeMenu,
                                                 text="Open",
-                                                command=self.button_event)
+                                                command=self.open_event)
         self.openFileButton.grid(row=2, column=3, pady=5, padx=5)
 
         self.playButton = CTk.CTkButton(master=self.analyzeMenu,
@@ -127,6 +130,12 @@ class App(CTk.CTk):
     #define functions for each button and input
     def button_event(self):
         print("Button pressed")
+
+    def open_event(self):
+        csv_file_path = askopenfilename()
+        print(csv_file_path)
+        dataset = pd.read_csv(csv_file_path)
+        print(dataset)
 
     def on_closing(self, event=0):
         self.destroy()
