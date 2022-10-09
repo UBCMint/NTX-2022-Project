@@ -24,8 +24,7 @@ class App(CTk.CTk):
         self.grid_columnconfigure(1, weight=1, minsize=360)
         self.grid_rowconfigure(0, weight=1)
 
-        self.menu = CTk.CTkFrame(master=self,
-                                                corner_radius=0)
+        self.menu = CTk.CTkFrame(master=self, corner_radius=0)
         self.menu.grid(row=0, column=1, sticky="nswe")
 
         self.stimulusWindow = CTk.CTkFrame(master=self)
@@ -38,11 +37,10 @@ class App(CTk.CTk):
         self.menu.grid_rowconfigure(1, weight=1)
         self.menu.grid_columnconfigure(0, weight=1)
 
-        self.analyzeMenu = CTk.CTkFrame(master=self.menu
-                                                )
+        self.analyzeMenu = CTk.CTkFrame(master=self.menu)
         self.analyzeMenu.grid(row=0, column=0, sticky="nswe",padx=2,pady=2)
-        self.recordMenu = CTk.CTkFrame(master=self.menu
-                                                )
+        
+        self.recordMenu = CTk.CTkFrame(master=self.menu)
         self.recordMenu.grid(row=1, column=0, sticky="nswe",padx=2,pady=2)
 
         ## ============ Record ============
@@ -122,6 +120,10 @@ class App(CTk.CTk):
         # ============ Stimuli Window ============
 
         #Display some sort of stimulus?
+        self.recordLabel = CTk.CTkLabel(master=self.stimulusWindow,
+                                              text="Colour Simulation",
+                                              text_font=("Roboto Medium", -16))
+        self.recordLabel.grid(row=1, column=0, columnspan=4, pady=10, padx=10, sticky="we")
 
 
     #define functions for each button and input
