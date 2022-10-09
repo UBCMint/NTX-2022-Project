@@ -1,3 +1,4 @@
+from tkinter import Toplevel
 import customtkinter as CTk
 
 CTk.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
@@ -17,6 +18,10 @@ class App(CTk.CTk):
         self.geometry(f"{App.WIDTH}x{App.HEIGHT}")
         self.protocol("WM_DELETE_WINDOW", self.on_closing)  # call .on_closing() when app gets closed
 
+        # Create color toplevel
+        self.colorWindow = CTk.CTkToplevel()
+        self.colorWindow.destroy()
+
         # ============ create two frames ============
 
         # configure grid layout (2x1)
@@ -29,7 +34,7 @@ class App(CTk.CTk):
         self.menu.grid(row=0, column=1, sticky="nswe")
 
         self.stimulusWindow = CTk.CTkFrame(master=self)
-        self.stimulusWindow.grid(row=0, column=0, sticky="nswe", padx=20, pady=20)
+        self.stimulusWindow.grid(row=0, column=0, sticky="nswe", padx=5, pady=5)
 
         # ============ Menu ============
 
@@ -120,13 +125,47 @@ class App(CTk.CTk):
         self.playButton.grid(row=9, column=0, columnspan=4, pady=5, padx=5, sticky="we")
 
         # ============ Stimuli Window ============
+        self.stimulusWindow.grid_rowconfigure(0,minsize=50)
 
-        #Display some sort of stimulus?
+        #Colour buttons
+        self.colorLabel = CTk.CTkLabel(master=self.stimulusWindow,
+                                        text="Colour Stimulus",
+                                        text_font=("Roboto Medium", -20),
+                                        anchor="w")
+        self.colorLabel.grid(row=1,column=0,columnspan=2,pady=5,padx=20, sticky="we")
+
+        self.redButton = CTk.CTkButton(master=self.stimulusWindow,
+                                        fg_color="red", 
+                                        text="",
+                                        height=40,
+                                        command=lambda:self.displayColor("red"))
+        self.redButton.grid(row=2,column=0,pady=5,padx=10, sticky="we")
+
+        self.blueButton = CTk.CTkButton(master=self.stimulusWindow,
+                                        fg_color="blue",
+                                        text="",height=40,
+                                        command=lambda:self.displayColor("blue"))
+        self.blueButton.grid(row=2,column=1,pady=5,padx=0, sticky="we")
+
+        self.greenButton = CTk.CTkButton(master=self.stimulusWindow,
+                                            fg_color="green",
+                                            text="",
+                                            height=40,
+                                            command=lambda:self.displayColor("green"))
+        self.greenButton.grid(row=2,column=2,pady=5,padx=10, sticky="we")
+        
 
 
     #define functions for each button and input
     def button_event(self):
         print("Button pressed")
+
+    def displayColor(self,color):
+        if not CTk.CTkToplevel.winfo_exists(self.colorWindow): 
+            self.colorWindow = CTk.CTkToplevel()
+            self.colorWindow.geometry(f"{App.WIDTH}x{App.HEIGHT}")
+        self.colorWindow.configure(bg=color)
+
 
     def on_closing(self, event=0):
         self.destroy()
