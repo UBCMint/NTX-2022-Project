@@ -4,6 +4,8 @@ from threading import Thread
 from tkinter import Toplevel
 import customtkinter as CTk
 from stimulus import cubeWindow,changeRotation
+from fileParser import recorder
+
 
 
 CTk.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
