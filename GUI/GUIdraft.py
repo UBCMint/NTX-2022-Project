@@ -1,20 +1,23 @@
+from random import randint
+import threading
+from threading import Thread
 from tkinter import Toplevel
 import customtkinter as CTk
+from stimulus import cubeWindow,changeRotation
+
 
 CTk.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
-CTk.set_default_color_theme("GUI\MintTheme.json")  # Themes: "blue" (standard), "green", "dark-blue"
-
+CTk.set_default_color_theme("GUI/Assets/MintTheme.json")  # Themes: "blue" (standard), "green", "dark-blue"
 
 class App(CTk.CTk):
-
     WIDTH = 780
     HEIGHT = 520
 
     def __init__(self):
         super().__init__()
-
+        self.cubeOpen = False
         self.title("NTX-2022-PROJECT")
-        self.iconbitmap("GUI/Images/logo.ico")
+        self.iconbitmap("GUI/Assets/logo.ico")
         self.geometry(f"{App.WIDTH}x{App.HEIGHT}")
         self.protocol("WM_DELETE_WINDOW", self.on_closing)  # call .on_closing() when app gets closed
 
@@ -126,6 +129,7 @@ class App(CTk.CTk):
 
         # ============ Stimuli Window ============
         self.stimulusWindow.grid_rowconfigure(0,minsize=50)
+        self.stimulusWindow.grid_rowconfigure(3,minsize=50)
 
         #Colour buttons
         self.colorLabel = CTk.CTkLabel(master=self.stimulusWindow,
@@ -153,11 +157,30 @@ class App(CTk.CTk):
                                             height=40,
                                             command=lambda:self.displayColor("green"))
         self.greenButton.grid(row=2,column=2,pady=5,padx=10, sticky="we")
+
+        #Cube buttons
+        self.cubeLabel = CTk.CTkLabel(master=self.stimulusWindow,
+                                        text="Cube Stimulus",
+                                        text_font=("Roboto Medium", -20),
+                                        anchor="w")
+        self.cubeLabel.grid(row=4,column=0,columnspan=2,pady=5,padx=20, sticky="we")
+
+        self.spinningCubeButton = CTk.CTkButton(master=self.stimulusWindow,
+                                                text="Spinning Cube",
+                                                command=self.spinCube)
+        self.spinningCubeButton.grid(row=5, column=0, pady=5, padx=5)
+
+        self.stillCubeButton = CTk.CTkButton(master=self.stimulusWindow,
+                                        text="Still Cube",
+                                        command=self.stillCube)
+        self.stillCubeButton.grid(row=5, column=1, pady=5, padx=5)
         
 
 
     #define functions for each button and input
+
     def button_event(self):
+        print(threading.activeCount())
         print("Button pressed")
 
     def displayColor(self,color):
@@ -166,6 +189,17 @@ class App(CTk.CTk):
             self.colorWindow.geometry(f"{App.WIDTH}x{App.HEIGHT}")
         self.colorWindow.configure(bg=color)
 
+    def openCube(self):
+        self.cubeOpen = True
+        Thread(target=cubeWindow).start()
+
+    def spinCube(self):
+        if not self.cubeOpen: self.openCube()
+        changeRotation(5,3)
+
+    def stillCube(self):
+        if not self.cubeOpen: self.openCube()
+        changeRotation(0,0)
 
     def on_closing(self, event=0):
         self.destroy()
