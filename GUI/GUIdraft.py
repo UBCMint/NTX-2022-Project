@@ -3,7 +3,8 @@ import threading
 from threading import Thread
 from tkinter import Toplevel
 import customtkinter as CTk
-from stimulus import cubeWindow,changeRotation
+from CubeNoOpenGL import Simulation
+#from stimulus import cubeWindow,changeRotation
 
 
 CTk.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
@@ -25,6 +26,8 @@ class App(CTk.CTk):
         self.colorWindow = CTk.CTkToplevel()
         self.colorWindow.destroy()
 
+        self.cubeWindow = None #Initialize cube window
+
         # ============ create two frames ============
 
         # configure grid layout (2x1)
@@ -43,15 +46,15 @@ class App(CTk.CTk):
 
         # configure grid layout (1x2)
         self.menu.grid_rowconfigure(0, weight=1)
-        self.menu.grid_rowconfigure(1, weight=1)
+        #self.menu.grid_rowconfigure(1, weight=1)
         self.menu.grid_columnconfigure(0, weight=1)
 
-        self.analyzeMenu = CTk.CTkFrame(master=self.menu
-                                                )
-        self.analyzeMenu.grid(row=0, column=0, sticky="nswe",padx=2,pady=2)
+        #self.analyzeMenu = CTk.CTkFrame(master=self.menu
+        #                                        )
+        #self.analyzeMenu.grid(row=0, column=0, sticky="nswe",padx=2,pady=2)
         self.recordMenu = CTk.CTkFrame(master=self.menu
                                                 )
-        self.recordMenu.grid(row=1, column=0, sticky="nswe",padx=2,pady=2)
+        self.recordMenu.grid(row=0, column=0, sticky="nswe",padx=2,pady=2)
 
         ## ============ Record ============
         # configure grid layout (4x11?)
@@ -99,33 +102,33 @@ class App(CTk.CTk):
                                                 state="disabled")
         self.saveButton.grid(row=10, column=2, columnspan=2, pady=5, padx=5, sticky="we")
 
-        ## ============ Analyze ============
-        # configure grid layout (4x4?)
-        self.analyzeMenu.grid_rowconfigure(0, minsize=10)   # empty row with minsize as spacing
-        self.analyzeMenu.grid_columnconfigure(0, weight=1, minsize=70)
-        self.analyzeMenu.grid_columnconfigure(2, weight=1)
-        self.analyzeMenu.grid_rowconfigure(3, weight=1)  # empty row as spacing
-        self.analyzeMenu.grid_rowconfigure(8, minsize=20)    # empty row with minsize as spacing
-        self.analyzeMenu.grid_rowconfigure(10, minsize=20)  # empty row with minsize as spacing
+        # ## ============ Analyze ============
+        # # configure grid layout (4x4?)
+        # self.analyzeMenu.grid_rowconfigure(0, minsize=10)   # empty row with minsize as spacing
+        # self.analyzeMenu.grid_columnconfigure(0, weight=1, minsize=70)
+        # self.analyzeMenu.grid_columnconfigure(2, weight=1)
+        # self.analyzeMenu.grid_rowconfigure(3, weight=1)  # empty row as spacing
+        # self.analyzeMenu.grid_rowconfigure(8, minsize=20)    # empty row with minsize as spacing
+        # self.analyzeMenu.grid_rowconfigure(10, minsize=20)  # empty row with minsize as spacing
 
-        self.recordLabel = CTk.CTkLabel(master=self.analyzeMenu,
-                                              text="Analyze",
-                                              text_font=("Roboto Medium", -16))  # font name and size in px
-        self.recordLabel.grid(row=1, column=0, columnspan=4, pady=10, padx=10, sticky="we")
+        # self.recordLabel = CTk.CTkLabel(master=self.analyzeMenu,
+        #                                       text="Analyze",
+        #                                       text_font=("Roboto Medium", -16))  # font name and size in px
+        # self.recordLabel.grid(row=1, column=0, columnspan=4, pady=10, padx=10, sticky="we")
 
-        self.analyzeFileName = CTk.CTkLabel(master=self.analyzeMenu,
-                                                text="File Name.csv")
-        self.analyzeFileName.grid(row=2, column=0, columnspan=3, pady=5, padx=5, sticky="we")
+        # self.analyzeFileName = CTk.CTkLabel(master=self.analyzeMenu,
+        #                                         text="File Name.csv")
+        # self.analyzeFileName.grid(row=2, column=0, columnspan=3, pady=5, padx=5, sticky="we")
 
-        self.openFileButton = CTk.CTkButton(master=self.analyzeMenu,
-                                                text="Open",
-                                                command=self.button_event)
-        self.openFileButton.grid(row=2, column=3, pady=5, padx=5)
+        # self.openFileButton = CTk.CTkButton(master=self.analyzeMenu,
+        #                                         text="Open",
+        #                                         command=self.button_event)
+        # self.openFileButton.grid(row=2, column=3, pady=5, padx=5)
 
-        self.playButton = CTk.CTkButton(master=self.analyzeMenu,
-                                                text="Play",
-                                                command=self.button_event)
-        self.playButton.grid(row=9, column=0, columnspan=4, pady=5, padx=5, sticky="we")
+        # self.playButton = CTk.CTkButton(master=self.analyzeMenu,
+        #                                         text="Play",
+        #                                         command=self.button_event)
+        # self.playButton.grid(row=9, column=0, columnspan=4, pady=5, padx=5, sticky="we")
 
         # ============ Stimuli Window ============
         self.stimulusWindow.grid_rowconfigure(0,minsize=50)
@@ -174,13 +177,22 @@ class App(CTk.CTk):
                                         text="Still Cube",
                                         command=self.stillCube)
         self.stillCubeButton.grid(row=5, column=1, pady=5, padx=5)
+
+        self.growCubeButton = CTk.CTkButton(master=self.stimulusWindow,
+                                                text="Grow Cube",
+                                                command=self.growCube)
+        self.growCubeButton.grid(row=6, column=0, pady=5, padx=5)
+
+        self.shrinkCubeButton = CTk.CTkButton(master=self.stimulusWindow,
+                                        text="Shrink Cube",
+                                        command=self.shrinkCube)
+        self.shrinkCubeButton.grid(row=6, column=1, pady=5, padx=5)
         
 
 
     #define functions for each button and input
 
     def button_event(self):
-        print(threading.activeCount())
         print("Button pressed")
 
     def displayColor(self,color):
@@ -190,16 +202,24 @@ class App(CTk.CTk):
         self.colorWindow.configure(bg=color)
 
     def openCube(self):
-        self.cubeOpen = True
-        Thread(target=cubeWindow).start()
+        if threading.active_count() < 2: 
+            Thread(target=lambda:Simulation().run()).start()
 
     def spinCube(self):
-        if not self.cubeOpen: self.openCube()
-        changeRotation(5,3)
+        self.openCube()
+        Simulation.spin()
 
     def stillCube(self):
-        if not self.cubeOpen: self.openCube()
-        changeRotation(0,0)
+        self.openCube()
+        Simulation.stop()
+    
+    def growCube(self):
+        self.openCube()
+        Simulation.grow()
+    
+    def shrinkCube(self):
+        self.openCube()
+        Simulation.shrink()
 
     def on_closing(self, event=0):
         self.destroy()
