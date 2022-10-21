@@ -61,11 +61,17 @@ class Point3D:
 class Simulation:
     da = 0
     dsize = 0
-    def __init__(self, win_width = 780, win_height = 520):
+    cube = True
+    bg = (0,0,0)
+    angle = 0
+    size = 1
+
+    def __init__(self, win_width = 1170, win_height = 780):
         pygame.init()
 
         self.screen = pygame.display.set_mode((win_width, win_height), pygame.RESIZABLE)
         pygame.display.set_caption("Stimulus Window")
+        pygame.display.set_icon(pygame.transform.smoothscale(pygame.image.load('GUI/Assets/MintLogoTransparent.png'),(32,32)))
 
         self.clock = pygame.time.Clock()
 
@@ -90,27 +96,47 @@ class Simulation:
         # Define colors for each face
         self.colors = [(255,255,255),(255,255,255),(255,255,255),(255,255,255),(255,255,255),(255,255,255)]
 
-        self.angle = 0
-        self.size = 1
 
     @classmethod
     def spin(self):
+        self.cube = True
+        Simulation.bg = (0,0,0)
         Simulation.da = 3
     
     @classmethod
     def stop(self):
+        self.cube = True
+        Simulation.bg = (0,0,0)
         Simulation.da = 0
         Simulation.dsize = 0
 
     @classmethod
     def grow(self):
+        self.cube = True
+        Simulation.bg = (0,0,0)
         #Simulation.da = 0
         Simulation.dsize = 0.01
 
     @classmethod
     def shrink(self):
+        self.cube = True
+        Simulation.bg = (0,0,0)
         #Simulation.da = 0
         Simulation.dsize = -0.01
+
+    @classmethod
+    def color(self,color):
+        Simulation.bg = color
+        Simulation.cube = False
+
+    @classmethod
+    def reset(self):
+        if not Simulation.cube: return
+        Simulation.bg = (0,0,0)
+        Simulation.da = 0
+        Simulation.dsize = 0
+        Simulation.size = 1
+        Simulation.angle = 0
 
     def run(self):
         """ Main Loop """
@@ -122,15 +148,18 @@ class Simulation:
                     
 
             self.clock.tick(50)
-            self.screen.fill((0,0,0))
+            self.screen.fill(self.bg)
 
+            if not self.cube: 
+                pygame.display.flip()
+                continue
             # It will hold transformed vertices.
             t = []
 
             for v in self.vertices:
                 # Rotate the point around X axis, then around Y axis, and finally around Z axis.
-                r = v.rotateX(self.angle).rotateY(self.angle).rotateZ(self.angle)
-                s = r.scale(self.size)
+                r = v.rotateX(Simulation.angle).rotateY(Simulation.angle).rotateZ(Simulation.angle)
+                s = r.scale(Simulation.size)
                 # Transform the point from 3D to 2D
                 p = s.project(self.screen.get_width(), self.screen.get_height(), 256, 4)
                 # Put the point in the list of transformed vertices
@@ -139,7 +168,7 @@ class Simulation:
             # Calculate colors based on light source
             for i,n in enumerate(self.normals):
                 l = Point3D(1,4,-4) #light source
-                r = n.rotateX(self.angle).rotateY(self.angle).rotateZ(self.angle) #rotate normal
+                r = n.rotateX(Simulation.angle).rotateY(Simulation.angle).rotateZ(Simulation.angle) #rotate normal
                 intensity = 0.5+r.dot(l)/l.magnitude()*0.5
                 self.colors[i] = (255*intensity,255*intensity,255*intensity)
 
@@ -162,9 +191,9 @@ class Simulation:
                              (t[f[3]].x, t[f[3]].y), (t[f[0]].x, t[f[0]].y)]
                 pygame.draw.polygon(self.screen,self.colors[face_index],pointlist)
 
-            self.angle += Simulation.da
-            self.size += Simulation.dsize
-            if self.size > 1.8: self.size,Simulation.dsize = 1.8,0
-            if self.size < 0.2: self.size,Simulation.dsize = 0.2,0
+            Simulation.angle += Simulation.da
+            Simulation.size += Simulation.dsize
+            if Simulation.size > 1.8: Simulation.size,Simulation.dsize = 1.8,0
+            if Simulation.size < 0.2: Simulation.size,Simulation.dsize = 0.2,0
             pygame.display.flip()
 
