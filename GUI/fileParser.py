@@ -4,37 +4,41 @@ import threading
 import pandas as pd
 import datetime as dt
 
-class recorder(fileName):
+class recorder:
 
-    fileName = "test.csv"
+    def __init__(self, stimE, bciConnectionE):
+        self.stimEvent = stimE
+        self.bciConnectionEvent = bciConnectionE 
 
-    def startRecord():
+    def startRecord(self):
         bciConnection = True
+        stimStart = False
         bciData = "0" # to be added
+        dataArray = [[],[],[]] #time, data, stimulus
         time = dt.now()
         i = 0
-        dataArray = [[],[],[]] #time, data, stimulus
 
         while(bciConnection):
-            dataArray[0][i] = time - dt.now()
-            dataArray[1][i] = bciData
-
-
-
+            dataArray[i][0] = time - dt.now()
+            dataArray[i][1] = bciData
+            dataArray[i][2] = stimStart
+            if(self.stimEvent.is_Set()):
+                stimStart = True
+            if(self.bciConnectionEvent.is_Set() == False):
+                bciConnection = False
+        return dataArray
 
     def save(stimName, data):
 
         outputName = stimName 
         i = 1
-
-        while(exists(outputName + ".csv")):
-            outputName = outputName + i
-            i = i + 1
+        if(exists(outputName + ".csv")):
+            while(exists(outputName + i + ".csv")):
+                i = i + 1
         
-        outputName = outputName + ".csv"
-
-        exportFile = open(outputName, 'w')
-        for d in data:
-            d[1]
+        outputName = outputName + i + ".csv"
+        outDf = pd.DataFrame(data)
+        outDf.to_csv(outputName)
+            
 
 
