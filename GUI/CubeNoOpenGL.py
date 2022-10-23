@@ -126,6 +126,7 @@ class Simulation:
 
     @classmethod
     def color(self,color):
+        Simulation.reset()
         Simulation.bg = color
         Simulation.cube = False
 

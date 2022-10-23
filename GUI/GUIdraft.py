@@ -25,9 +25,10 @@ class App(CTk.CTk):
         # ============ create two frames ============
 
         # configure grid layout (2x1)
-        self.grid_columnconfigure(0, weight=10)
-        self.grid_columnconfigure(1, weight=1, minsize=360)
+        self.grid_columnconfigure(0, weight=10, minsize=360)
+        self.grid_columnconfigure(1, weight=3, minsize=360)
         self.grid_rowconfigure(0, weight=1)
+        
 
         self.menu = CTk.CTkFrame(master=self,
                                                 corner_radius=0)
@@ -93,67 +94,76 @@ class App(CTk.CTk):
         self.saveButton.grid(row=10, column=2, columnspan=2, pady=5, padx=5, sticky="we")
 
         # ============ Stimuli Window ============
-        self.stimulusWindow.grid_rowconfigure(0,minsize=50)
-        self.stimulusWindow.grid_rowconfigure(3,minsize=50)
+        self.stimulusWindow.grid_columnconfigure(0,weight=1)
+        self.stimulusWindow.grid_columnconfigure(1,weight=1)
+        self.stimulusWindow.grid_columnconfigure(2,weight=1)
+        self.stimulusWindow.grid_rowconfigure(0,weight=0,minsize=50)
+        self.stimulusWindow.grid_rowconfigure(1,weight=0)
+        self.stimulusWindow.grid_rowconfigure(2,weight=1)
+        self.stimulusWindow.grid_rowconfigure(3,weight=0,minsize=50)
+        self.stimulusWindow.grid_rowconfigure(4,weight=0)
+        self.stimulusWindow.grid_rowconfigure(5,weight=1)
+        self.stimulusWindow.grid_rowconfigure(6,weight=1)
+        self.stimulusWindow.grid_rowconfigure(7,weight=4,minsize=50)
 
         #Colour buttons
         self.colorLabel = CTk.CTkLabel(master=self.stimulusWindow,
                                         text="Colour Stimulus",
                                         text_font=("Roboto Medium", -20),
                                         anchor="w")
-        self.colorLabel.grid(row=1,column=0,columnspan=2,pady=5,padx=20, sticky="we")
+        self.colorLabel.grid(row=1,column=0,columnspan=2,pady=5,padx=20, sticky="nswe")
 
         self.redButton = CTk.CTkButton(master=self.stimulusWindow,
                                         fg_color="red", 
                                         text="",
                                         height=40,
                                         command=lambda:self.displayColor("red"))
-        self.redButton.grid(row=2,column=0,pady=5,padx=10, sticky="we")
+        self.redButton.grid(row=2,column=0,pady=5,padx=10, sticky="nswe")
 
         self.blueButton = CTk.CTkButton(master=self.stimulusWindow,
                                         fg_color="blue",
                                         text="",height=40,
                                         command=lambda:self.displayColor("blue"))
-        self.blueButton.grid(row=2,column=1,pady=5,padx=0, sticky="we")
+        self.blueButton.grid(row=2,column=1,pady=5,padx=0, sticky="nswe")
 
         self.greenButton = CTk.CTkButton(master=self.stimulusWindow,
                                             fg_color="#0f0",
                                             text="",
                                             height=40,
                                             command=lambda:self.displayColor((0,255,0)))
-        self.greenButton.grid(row=2,column=2,pady=5,padx=10, sticky="we")
+        self.greenButton.grid(row=2,column=2,pady=5,padx=10, sticky="nswe")
 
         #Cube buttons
         self.cubeLabel = CTk.CTkLabel(master=self.stimulusWindow,
                                         text="Cube Stimulus",
                                         text_font=("Roboto Medium", -20),
                                         anchor="w")
-        self.cubeLabel.grid(row=4,column=0,columnspan=2,pady=5,padx=20, sticky="we")
+        self.cubeLabel.grid(row=4,column=0,columnspan=2,pady=5,padx=20, sticky="nswe")
 
         self.spinningCubeButton = CTk.CTkButton(master=self.stimulusWindow,
                                                 text="Spinning Cube",
                                                 command=self.spinCube)
-        self.spinningCubeButton.grid(row=5, column=0, pady=5, padx=5)
+        self.spinningCubeButton.grid(row=5, column=0, pady=5, padx=5,sticky="nswe")
 
         self.stillCubeButton = CTk.CTkButton(master=self.stimulusWindow,
                                         text="Still Cube",
                                         command=self.stillCube)
-        self.stillCubeButton.grid(row=5, column=1, pady=5, padx=5)
+        self.stillCubeButton.grid(row=5, column=1, pady=5, padx=5,sticky="nswe")
 
         self.growCubeButton = CTk.CTkButton(master=self.stimulusWindow,
                                                 text="Grow Cube",
                                                 command=self.growCube)
-        self.growCubeButton.grid(row=6, column=0, pady=5, padx=5)
+        self.growCubeButton.grid(row=6, column=0, pady=5, padx=5,sticky="nswe")
 
         self.shrinkCubeButton = CTk.CTkButton(master=self.stimulusWindow,
                                         text="Shrink Cube",
                                         command=self.shrinkCube)
-        self.shrinkCubeButton.grid(row=6, column=1, pady=5, padx=5)
+        self.shrinkCubeButton.grid(row=6, column=1, pady=5, padx=5,sticky="nswe")
 
         self.resetButton = CTk.CTkButton(master=self.stimulusWindow,
                                         text="Reset",
                                         command=self.resetStim)
-        self.resetButton.grid(row=5, column=2, rowspan=2, pady=5, padx=5, sticky="ns")
+        self.resetButton.grid(row=5, column=2, rowspan=2, pady=5, padx=5, sticky="nswe")
         
  
 
@@ -170,7 +180,7 @@ class App(CTk.CTk):
         Simulation.reset()
 
     def openStim(self):
-        if threading.active_count() < 2: 
+        if threading.active_count() < 2: # THIS MAY CAUSE ISSUES ONCE WE START RECORDING. =======================================================================================
             Thread(target=lambda:Simulation().run()).start()
 
     def spinCube(self):
