@@ -1,3 +1,2 @@
 pygame
 customtkinter
-PyOpenGL_accelerate

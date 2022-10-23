@@ -1,7 +1,5 @@
-from random import randint
 import threading
 from threading import Thread
-from tkinter import Toplevel
 import customtkinter as CTk
 from CubeNoOpenGL import Simulation
 #from stimulus import cubeWindow,changeRotation
@@ -182,7 +180,7 @@ class App(CTk.CTk):
     def openStim(self):
         if threading.active_count() < 2: # THIS MAY CAUSE ISSUES ONCE WE START RECORDING. =======================================================================================
             Thread(target=lambda:Simulation().run()).start()
-
+            
     def spinCube(self):
         self.openStim()
         Simulation.spin()
