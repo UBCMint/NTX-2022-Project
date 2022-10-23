@@ -22,14 +22,14 @@ class File:
         if self.type == "r":
             
             #Extract file info (top few lines)
-            info = pd.read_csv("OpenBCI-RAW.txt", nrows=3, delimiter=" ").to_numpy()
+            info = pd.read_csv(self.path, nrows=3, delimiter=" ").to_numpy()
 
 
             #Header (Column names)
-            header = pd.read_csv("OpenBCI-RAW.txt", skiprows=4, nrows=1).to_numpy()
+            header = pd.read_csv(self.path, skiprows=4, nrows=1).to_numpy()
 
             #Make 9 column data 2D array
-            full_data = pd.read_csv("OpenBCI-RAW.txt", skiprows=5).to_numpy()
+            full_data = pd.read_csv(self.path, skiprows=5).to_numpy()
             time_index_data = full_data[:,:9]
 
             #convert time index to seconds
