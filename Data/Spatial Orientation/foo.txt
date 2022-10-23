@@ -1,1 +1,0 @@
-This is where the EEG datasets for spatial orientation will be uploaded.
