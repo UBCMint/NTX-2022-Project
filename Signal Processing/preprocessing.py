@@ -68,7 +68,6 @@ class Preprocess(object):
         1) ifft where it is frequency data, and
         2) plot where it depends on type of data
     """
-
     def fft(self, data: np.ndarray) -> np.ndarray:
         """
             Computes discrete Fourier Transform of data from all channels, 
@@ -85,35 +84,92 @@ class Preprocess(object):
         
         
         return fft_data
-        
-        return 
+     
 
     def hpass(self, data: np.ndarray, f = 0.5)-> np.ndarray:
         """
             TODO: Applies High Pass filter to fft data and converts it to time series
             params
+            
+            data = [[time, e1, e2, e3, e4, e5, e6, e7, e8], [time, e1, e2, e3, e4, e5, e6, e7, e8], ..]
+            
+            1. Use fft function to create new variable (fftdata) 
+            
+            data = [[freq, e1, e2, e3, e4, e5, e6, e7, e8], [freq, e1, e2, e3, e4, e5, e6, e7, e8], ..]
+            
+            2. Index through each array (row) within data. 
+            3. Index through the array within the row. 
+            4. Filter each channel: 
+                    - remove frequencies below threshold (0.5) 
+                    - make that index equal to 0
+            5. return the filtered array 
+            
         """
-
-        return 0
+        
+        fftdata = fft(data) 
+        
+        for i in len(fftdata) {
+            
+            if fftdata[i, 0] < f:
+            
+            for j in len(fftdata[i]) {
+                fftdata[i, j] = 0
+            }   
+                
+        }
+            
+        return ifft(fftdata) 
 
     def lpass(self, data: np.ndarray, f = 100)-> np.ndarray:
         """
            TODO: Applies Low Pass filter to fft data and convert it to time series
         """
-        return 0
+        
+        fftdata = fft(data) 
+        
+        for i in len(fftdata) {
+            
+            if fftdata[i, 0] > f:
+            
+            for j in len(fftdata[i]) {
+                fftdata[i, j] = 0
+            }   
+                
+        }
+            
+        return ifft(fftdata)
 
     def notch(self, data: np.ndarray, f = [50, 60])-> np.ndarray:
         """
             TODO: Applies notch filter to either 50hz+harmonics or 
             60 hz + harmonics, or 50 and 60 hz+ harmonics depending on f and converts it to time series
+            
+            1. The notch filter either nullifies frequencies at 50, 60 or both 50 and 60
+            
         """
-        return 0
+        
+        fftdata = fft(data) 
+        
+        for i in len(fftdata) 
+        {  
+            if fftdata%f == 0:
+                fftdata[i, f] = 0
+        }
+        
+        return ifft(fftdata)
     
     def ifft(self, data: np.ndarray)-> np.ndarray:
         """
             Convert filtered data back to time series using inverse fft
         """
-        return 0
+        sample_rate = 250.0
+        num_sample = len(data[:,0])
+        total_time = num_sample/sample_rate
+        step = 1/sample_rate
+        time = np.arange(0, total_time, step, dtype=float)
+        ifft_data = np.fft.ifft(data, axis = 0)
+        ifft_data[:,0] = freq
+        return ifft_data
 
     def plot(self, data: np.ndarray, type: str = 'Raw'):
         """
