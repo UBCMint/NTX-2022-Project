@@ -1,10 +1,3 @@
-"""
- Simulation of a rotating 3D Cube
- Developed by Leonel Machava <leonelmachava@gmail.com>
-
-http://codeNtronix.com
-
-"""
 import sys, math, pygame
 from operator import itemgetter
 
