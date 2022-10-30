@@ -14,27 +14,27 @@ def main():
         The main function to start calling Preprocess class
     """
     # path to Raw Data
-    rpath = os.path.join(os.path.dirname(os.getcwd()),'Data','Raw Data')
-    fpath = os.path.join(os.path.dirname(os.getcwd()),'Data','Filtered Data')
+    rpath = os.path.join(os.getcwd(),'Data','Raw Data')
+    fpath = os.path.join(os.getcwd(),'Data','Filtered Data')
     for folder in os.listdir(rpath):
         rpathexp = os.path.join(rpath,folder)
         for rfile in os.listdir(rpathexp):
             path_data_file = os.path.join(rpathexp,rfile)
             # load dataset
-            data_file = pp.File(path_data_file, 'r')
+            data_file = pp.File(path_data_file)
             (info, rdata) = data_file.load()
             # initialise dataset
             p = pp.Preprocess()
             hdata = p.hpass(rdata)
             ldata = p.lpass(hdata)
-            ndata = p.notch(ldata)
-            p.plot(rdata, 'Raw')
-            p.plot(ndata, 'Filtered')
-            p.plot(rdata, 'FFT')
-            p.plot(ndata, 'FFT')
-
-            path_fdata_file = os.path.join(fpath,folder,rfile)
-            fdata_file =pp.File(path_fdata_file,'w')
+            # remove powerline noise using notch filter
+            # powerline noise in Canada at 60Hz
+            # source: https://www.canada.ca/en/health-canada/services/health-risks-safety/radiation/everyday-things-emit-radiation/power-lines-electrical-appliances.html 
+            ndata = p.notch(ldata, f = [60])
+            
+            pfile = "filtered_"+rfile
+            path_fdata_file = os.path.join(fpath,folder,pfile)
+            fdata_file =pp.File(path_fdata_file)
             fdata_file.write(ndata)
 
 if __name__ == '__main__':
