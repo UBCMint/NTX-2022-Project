@@ -26,6 +26,8 @@ class recorder:
                 stimStart = True
             if(self.bciConnectionEvent.is_Set() == False):
                 bciConnection = False
+            i = i+1
+            
         return dataArray
 
     def save(stimName, data):
